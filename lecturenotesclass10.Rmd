@@ -168,6 +168,7 @@ two_roll_results <- tibble(
 )
 ```
 
+
 ```{r identify_events}
 two_roll_results <- two_roll_results %>%
   mutate(event_1 = (roll_1)^2 == roll_2,
