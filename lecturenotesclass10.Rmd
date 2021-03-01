@@ -1,7 +1,7 @@
 ---
 title: "Introduction to probability"
-author: ""
-date: ""
+author: "Ryan Lou"
+date: "2/22/21"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -48,18 +48,18 @@ xtabs(~ Treatment + Improved, data = Arthritis) %>%
   addmargins()
 ```
 
-- How many patients were enrolled in the clinical trial?
+- How many patients were enrolled in the clinical trial? 84
 
-- What is the probability a randomly selected patient received the placebo?
+- What is the probability a randomly selected patient received the placebo? 43/84
 
 - What is the probability a randomly selected patient received the placebo
-  and had a marked improvement?
+  and had a marked improvement? 7/84
   
 - What is the probability a randomly selected patient received the placebo
-  and the treatment?
+  and the treatment? 0/84
   
 - What is the probability a randomly selected patient had some improvement or
-  was on the treatment?
+  was on the treatment? 48/84
 
 ## Using computer simulations to calculate probabilities
 
@@ -73,8 +73,8 @@ marbles <- c("red", "red", "white", "red", "blue", "blue", "red", "blue")
 ```
 
 Suppose we draw a single marble from our imaginary box, where all the marbles
-are equally likely to be selected. What is the probability the marble is blue? 
-How about white?
+are equally likely to be selected. What is the probability the marble is blue? 3/8
+How about white? 1/8
 
 We can simulate this "drawing" with the `sample()` function.
 
@@ -101,6 +101,7 @@ prop.table(counts)
 ```
 
 How close is this value to the "true" probability?
+White's probability = 1/8 = 0.125, which is very close. Blue's probability = 3/8 = 0.375 which is very close as well, and Red's probability = 4/8 = 0.5 which is close as well. Overall, the deviation from the actual probability is around 0.005.
 
 **To summarize our process:**
 
@@ -116,7 +117,7 @@ What if we want to compute the probability of getting two marbles of the same
 color if we make two draws with replacement? We haven't discussed how to
 compute this theoretically yet, but this is what computers are good at.
 
-Before we do this, what is your guess as to what the probability will be?
+Before we do this, what is your guess as to what the probability will be? 26/64
 
 We'll still use `sample()` to run our simulation many times, but we'll
 use `dplyr` functions to compute the relative frequencies.
@@ -155,18 +156,29 @@ difference between dice roll 1 and dice roll 2 is equal to 4.
 
 Perform a simulation to compute this empirical probability.
 
-Write down your guess to the answer before you calculate it.
+Write down your guess to the answer before you calculate it. 
+I think the second event of the absolute value of the difference between dice roll 1 and dice roll 2 being equal to 4 would be more likely.
 
 ```{r simulate_rolls}
+dice <- (1:6)
 
+two_roll_results <- tibble(
+  roll_1 = sample(dice, size = 10000, replace = TRUE),
+  roll_2 = sample(dice, size = 10000, replace = TRUE)
+)
 ```
 
 ```{r identify_events}
-
+two_roll_results <- two_roll_results %>%
+  mutate(event_1 = (roll_1)^2 == roll_2,
+         event_2 = abs(roll_1 - roll_2) == 4)
+two_roll_results
 ```
 
 ```{r summarize_rolls}
-
+two_roll_results %>%
+  count(event_1, event_2) %>% 
+  mutate(proportion = n / sum(n))
 ```
 
 ## Additional Resources-please look at before Weds.
